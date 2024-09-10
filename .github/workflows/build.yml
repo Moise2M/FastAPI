@@ -6,6 +6,7 @@ on:
     branches: [ "main" ]
 
 jobs:
+
   build-image1-backend:
     runs-on: ubuntu-latest
     steps:
@@ -17,25 +18,9 @@ jobs:
         password: ${{ secrets.SCALEWAY_API_KEY }}
         registry: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}
     - name: Build the Docker image
-      run: docker-compose build backend -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/image1
+      run: docker build . -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/moise
     - name: Push the Docker Image
-      run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/groupe-2
-
-  build-image2-frontend:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Login to Scaleway Container Registry
-      uses: docker/login-action@v3
-      with:
-        username: nologin
-        password: ${{ secrets.SCALEWAY_API_KEY }}
-        registry: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}
-    - name: Build the Docker image
-      run: docker-compose build frontend -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/image2
-    - name: Push the Docker Image
-      run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/groupe-2
-
+      run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/moise
 
   deploy:
       runs-on: ubuntu-latest
@@ -51,20 +36,11 @@ jobs:
             # stop, remove and update step by step
             script: |
               cd ./bienvenu
-              docker-compose down || true
+              docker stop moise || true
               docker rm . || true
-              docker pull ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/image1
-              docker pull ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/image2
-              docker-compose up -d 
+              docker pull ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/moise
+              docker run moise
 
 
 
 
-
-
-
-              # cd leisure-experience-app
-              # docker-compose -f docker-compose.test.yml down
-              # docker load < django.tar
-              # docker load < nextjs.tar
-              # COMPOSE_HTTP_TIMEOUT=200 docker-compose -f docker-compose.test.yml up -d      
