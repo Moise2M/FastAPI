@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-  build-image1-backend:
+  build-image:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -37,9 +37,9 @@ jobs:
             script: |
               cd ./bienvenu
               docker stop moise || true
-              docker rm . || true
+              docker rm moise || true
               docker pull ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/moise
-              docker run moise
+              docker run -d --name moise -p 8001:8506 ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/moise
 
 
 
