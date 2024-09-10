@@ -40,7 +40,7 @@ jobs:
               docker rm moise || true
               docker pull ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/moise
               echo "Sderniere etape"
-              docker run -d --name moise -p 8001:8506 ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/moise
+              docker run -d --name moise -p 8001:8506 ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/moise:latest
 
 
 
